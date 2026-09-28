@@ -1,0 +1,90 @@
+{
+  "expo": {
+    "name": "FieldOps",
+    "slug": "fieldops",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1D4ED8"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fieldops.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "FieldOps needs your location to track your work progress and check into job sites.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "FieldOps needs your location in the background to keep dispatchers informed of your real-time position.",
+        "NSLocationAlwaysUsageDescription": "FieldOps requires always-on location access for background GPS tracking during work hours.",
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1D4ED8"
+      },
+      "package": "com.fieldops.app",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "FieldOps needs background location access for GPS tracking during work.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "FieldOps needs camera access to capture job site photos."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "FieldOps needs photo library access for attaching job site images."
+        }
+      ],
+      "expo-font"
+    ],
+    "scheme": "fieldops",
+    "extra": {
+      "apiUrl": "http://192.168.18.211:3001",
+      "wsUrl": "http://192.168.18.211:3001",
+      "eas": {
+        "projectId": "8c70383e-fac6-46d7-ba06-bb1c81ba03ab"
+      },
+      "router": {}
+    }
+  }
+}

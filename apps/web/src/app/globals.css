@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+}
+
+@layer components {
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors;
+  }
+  .card {
+    @apply bg-white rounded-xl border border-slate-200 shadow-sm;
+  }
+  .input {
+    @apply w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition;
+  }
+}
+
+/* Mapbox overrides */
+.mapboxgl-map {
+  font-family: inherit;
+}
+
+.worker-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.worker-marker:hover {
+  transform: scale(1.2);
+}
+
+.worker-marker.available {
+  background-color: #10b981;
+}
+
+.worker-marker.busy {
+  background-color: #f59e0b;
+}
+
+.worker-marker.offline {
+  background-color: #6b7280;
+}
+
+.geofence-popup .mapboxgl-popup-content {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+}
