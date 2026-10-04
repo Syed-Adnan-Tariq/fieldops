@@ -21,37 +21,17 @@ async function bootstrap() {
     .map((o) => o.trim().replace(/\/$/, ''));
 
   app.enableCors({
-    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      // 1. Allow non-browser agents (Native React Native/Expo, cURL, Postman)
-      if (!origin) return callback(null, true);
-
-      const normalized = origin.replace(/\/$/, '');
-
-      // 2. Allow common mobile webview/local origins (Android/iOS Expo, Capacitor, Ionic, WebView)
-      const isMobileLocalOrigin =
-        normalized === 'file://' ||
-        normalized.startsWith('http://localhost') ||
-        normalized.startsWith('https://localhost') ||
-        normalized.startsWith('http://10.0.2.2') || // Android Emulator loopback
-        normalized.startsWith('capacitor://') ||
-        normalized.startsWith('ionic://') ||
-        normalized.startsWith('exp://'); // Expo Go
-
-      if (isMobileLocalOrigin) {
-        return callback(null, true);
-      }
-
-      // 3. Allow explicitly configured origins or wildcard '*'
-      if (corsOrigins.includes('*') || corsOrigins.includes(normalized)) {
-        return callback(null, true);
-      }
-
-      logger.warn(`Blocked by CORS: ${origin}`);
-      callback(new Error(`Not allowed by CORS: ${origin}`));
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'x-device-id', 'x-platform'],
+    origin: true, // Allows all origins dynamically
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
+      'x-device-id',
+      'x-platform',
+    ],
   });
 
   // Global validation pipe
