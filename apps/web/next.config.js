@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  optimizeFonts: false,
   output: 'standalone',
   reactStrictMode: true,
   transpilePackages: ['@fieldops/shared'],

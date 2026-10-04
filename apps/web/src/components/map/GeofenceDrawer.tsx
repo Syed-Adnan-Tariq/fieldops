@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import type { Feature, Polygon } from 'geojson';
 import mapboxgl from 'mapbox-gl';
 import { MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM, GeofenceType } from '@fieldops/shared';
 
@@ -36,7 +37,7 @@ function generateCircleGeoJSON(
   center: [number, number],
   radiusMeters: number,
   numPoints = 64,
-): GeoJSON.Feature<GeoJSON.Polygon> {
+): Feature<Polygon> {
   const [lng, lat] = center;
   const earthRadius = 6371000;
   const dLat = (radiusMeters / earthRadius) * (180 / Math.PI);
@@ -157,7 +158,7 @@ export function GeofenceDrawer({ onSave, existingGeofences = [] }: GeofenceDrawe
 
         if (newPoints.length >= 3) {
           const closed = [...newPoints, newPoints[0]];
-          const geojson: GeoJSON.Feature<GeoJSON.Polygon> = {
+          const geojson: Feature<Polygon> = {
             type: 'Feature',
             properties: {},
             geometry: { type: 'Polygon', coordinates: [closed] },
