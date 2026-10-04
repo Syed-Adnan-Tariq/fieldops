@@ -57,6 +57,7 @@ services:
       BULL_REDIS_HOST: redis
       BULL_REDIS_PORT: ${REDIS_PORT:-6379}
       NODE_ENV: production
+      CORS_ORIGINS: "${CORS_ORIGINS}"
     ports:
       - '${APP_PORT:-3001}:3001'
     depends_on:
