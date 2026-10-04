@@ -16,18 +16,27 @@ async function bootstrap() {
   // CORS configuration
   const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
     .split(',')
-    .map((o) => o.trim());
+    .map((o) => o.trim().replace(/\/$/, '')); // Normalize trailing slashes
 
   app.enableCors({
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      // Allow requests with no origin (mobile apps, Postman, etc.)
+      // Allow requests with no origin (mobile apps, Postman, server-to-server)
       if (!origin) return callback(null, true);
+
+      const normalizedOrigin = origin.replace(/\/$/, '');
+
       // Allow all localhost origins in development
-      if (process.env.NODE_ENV !== 'production' && origin.startsWith('http://localhost')) {
+      if (process.env.NODE_ENV !== 'production' && normalizedOrigin.startsWith('http://localhost')) {
         return callback(null, true);
       }
-      if (corsOrigins.includes(origin)) return callback(null, true);
-      callback(new Error('Not allowed by CORS'));
+
+      // Allow wildcard match if configured
+      if (corsOrigins.includes('*') || corsOrigins.includes(normalizedOrigin)) {
+        return callback(null, true);
+      }
+
+      logger.warn(`Blocked by CORS: ${origin}`);
+      callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
