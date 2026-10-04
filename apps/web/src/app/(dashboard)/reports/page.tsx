@@ -14,7 +14,7 @@ import { BarChart3, PieChart as PieIcon, Table2, RefreshCw, Download } from 'luc
 
 const PIE_COLORS = ['#10B981', '#EF4444', '#F59E0B', '#3B82F6'];
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://187.127.122.138:3001';
 
 type TabType = 'overview' | 'mileage' | 'performance';
 
