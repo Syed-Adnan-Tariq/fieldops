@@ -11,27 +11,38 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: ['error', 'warn', 'log', 'debug'],
   });
+
   app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
-  // CORS configuration
-  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
+  // Parse CORS origins from .env
+  const rawCorsOrigins = process.env.CORS_ORIGINS || 'http://localhost:3000';
+  const corsOrigins = rawCorsOrigins
     .split(',')
-    .map((o) => o.trim().replace(/\/$/, '')); // Normalize trailing slashes
+    .map((o) => o.trim().replace(/\/$/, ''));
 
   app.enableCors({
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      // Allow requests with no origin (mobile apps, Postman, server-to-server)
+      // 1. Allow non-browser agents (Native React Native/Expo, cURL, Postman)
       if (!origin) return callback(null, true);
 
-      const normalizedOrigin = origin.replace(/\/$/, '');
+      const normalized = origin.replace(/\/$/, '');
 
-      // Allow all localhost origins in development
-      if (process.env.NODE_ENV !== 'production' && normalizedOrigin.startsWith('http://localhost')) {
+      // 2. Allow common mobile webview/local origins (Android/iOS Expo, Capacitor, Ionic, WebView)
+      const isMobileLocalOrigin =
+        normalized === 'file://' ||
+        normalized.startsWith('http://localhost') ||
+        normalized.startsWith('https://localhost') ||
+        normalized.startsWith('http://10.0.2.2') || // Android Emulator loopback
+        normalized.startsWith('capacitor://') ||
+        normalized.startsWith('ionic://') ||
+        normalized.startsWith('exp://'); // Expo Go
+
+      if (isMobileLocalOrigin) {
         return callback(null, true);
       }
 
-      // Allow wildcard match if configured
-      if (corsOrigins.includes('*') || corsOrigins.includes(normalizedOrigin)) {
+      // 3. Allow explicitly configured origins or wildcard '*'
+      if (corsOrigins.includes('*') || corsOrigins.includes(normalized)) {
         return callback(null, true);
       }
 
@@ -39,7 +50,7 @@ async function bootstrap() {
       callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'x-device-id', 'x-platform'],
     credentials: true,
   });
 
@@ -78,6 +89,7 @@ async function bootstrap() {
       'JWT-auth',
     )
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
