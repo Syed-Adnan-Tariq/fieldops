@@ -45,10 +45,10 @@ import { RecurringJobEntity } from '../recurring-jobs/entities/recurring-job.ent
           TeamEntity,
           RecurringJobEntity,
         ],
-        synchronize: config.get<string>('NODE_ENV', 'development') !== 'production',
+        synchronize: true,
         logging: config.get<string>('NODE_ENV', 'development') === 'development',
         migrations: ['dist/migrations/*.js'],
-        migrationsRun: false,
+        migrationsRun: true,
         extra: {
           max: 20,
           idleTimeoutMillis: 30000,
